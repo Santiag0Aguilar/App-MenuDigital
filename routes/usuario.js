@@ -22,7 +22,7 @@ router.get("/register", (req, res) => {
 
 router.post("/register", validateUser, registro);
 
-/* endpoints de info rapida del token del usuario
+/* endpoints de info rapida del token del usuario 
   Preguntas calve
 
   Quien eres?

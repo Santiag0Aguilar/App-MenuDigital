@@ -2,34 +2,25 @@ import bcrypt from "bcrypt";
 import { userModel } from "./../model/user.model.js";
 
 /* Que va a realizar el sistema? */
-const registerUser = async (body) => {
-  const {
-    email,
-    password,
-    businessName,
-    primaryColor,
-    loyverseKey,
-    rol,
-    templateType,
-  } = body;
+const registerUser = async (body, tx) => {
+  const existingUser = await userModel.findByEmail(body.email, tx);
+  if (existingUser) throw new Error("Email registrado");
 
-  const existingUser = await userModel.findByEmail(email);
-  if (existingUser) {
-    throw new Error("Email registrado");
-  }
+  const passwordHash = await bcrypt.hash(body.password, 10);
+  const loyverseKeyHash = await bcrypt.hash(body.loyverseKey, 10);
 
-  const passwordHash = await bcrypt.hash(password, 10);
-  const loyverseKeyHash = await bcrypt.hash(loyverseKey, 10);
-
-  return userModel.create({
-    email,
-    password: passwordHash,
-    role: rol,
-    businessName,
-    loyverseKeyHash,
-    primaryColor,
-    templateType,
-  });
+  return userModel.create(
+    {
+      email: body.email,
+      password: passwordHash,
+      role: body.rol,
+      businessName: body.businessName,
+      loyverseKeyHash,
+      primaryColor: body.primaryColor,
+      templateType: body.templateType,
+    },
+    tx,
+  );
 };
 
 export const getMe = async (userId) => {

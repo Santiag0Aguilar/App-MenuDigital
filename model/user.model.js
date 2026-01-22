@@ -8,26 +8,22 @@ const prisma = new PrismaClient({
 });
 
 export const userModel = {
-  findByEmail(email) {
-    return prisma.user.findUnique({
+  findByEmail(email, tx = prisma) {
+    return tx.user.findUnique({
       where: { email },
     });
   },
 
-  create(data) {
-    return prisma.user.create({
+  create(data, tx = prisma) {
+    return tx.user.create({
       data,
     });
   },
 
-  findById(userId) {
-    return prisma.user.findUnique({
+  findById(userId, tx = prisma) {
+    return tx.user.findUnique({
       where: { id: userId },
-      select: {
-        id: true,
-        email: true,
-        role: true,
-      },
+      select: { id: true, email: true, role: true },
     });
   },
 };
