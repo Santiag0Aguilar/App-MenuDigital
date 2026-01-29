@@ -1,13 +1,13 @@
 import bcrypt from "bcrypt";
 import { userModel } from "./../model/user.model.js";
+import { encrypt } from "./../utils/crypto.js";
 
-/* Que va a realizar el sistema? */
 const registerUser = async (body, tx) => {
   const existingUser = await userModel.findByEmail(body.email, tx);
   if (existingUser) throw new Error("Email registrado");
 
   const passwordHash = await bcrypt.hash(body.password, 10);
-  const loyverseKeyHash = await bcrypt.hash(body.loyverseKey, 10);
+  const loyverseKeyHash = encrypt(body.loyverseKey);
 
   return userModel.create(
     {

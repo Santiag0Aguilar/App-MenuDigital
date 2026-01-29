@@ -1,10 +1,23 @@
+import pkg from "@prisma/client";
 import logearUsuario from "./../service/login.service.js";
+import createMenu from "../service/createMenu.service.js";
+
+const { PrismaClient } = pkg;
+const prisma = new PrismaClient();
 
 const logear = async (req, res) => {
   try {
-    const user = await logearUsuario(req.body);
-    res.status(200).json({
-      accessToken: user,
+    const result = await prisma.$transaction(async (tx) => {
+      const auth = await logearUsuario(req.body, tx);
+      console.log(auth);
+      const menu = await createMenu(auth.user, tx);
+      console.log(menu);
+      return { auth, menu };
+    });
+
+    res.status(201).json({
+      accessToken: result.auth.token,
+      menu: result.menu,
     });
   } catch (error) {
     res.status(400).json({

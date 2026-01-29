@@ -6,7 +6,7 @@ const authMiddelware = (req, res, next) => {
   /* StartsWith es un metodo para strings de express que busca derminados caracteres y retorna true o false en este caso buscamos que se contenga un token */
   if (!authToken || !authToken.startsWith("Bearer ")) {
     return res.status(401).json({
-      message: "Token requerido",
+      message: "Por favor inicie sesion primero.",
     });
   }
 

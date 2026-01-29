@@ -3,32 +3,29 @@ import jwt from "jsonwebtoken";
 import bycrpt from "bcrypt";
 import { userModel } from "./../model/user.model.js";
 
-const logearUsuario = async (body) => {
+const logearUsuario = async (body, tx) => {
   const { email, password } = body;
-  console.log(typeof email);
-  /* Revisamos en la consulta si el usuario existe, findbyemail retorna el usuario en object o null */
-  const existingUser = await userModel.findByEmail(email);
-  if (existingUser === null) {
-    throw new Error("Usuario no registrado");
-  }
+
+  const existingUser = await userModel.findByEmail(email, tx);
+  if (!existingUser) throw new Error("Usuario no registrado");
 
   const isValid = await bycrpt.compare(password, existingUser.password);
-  if (!isValid) {
-    throw new Error("Credenciales invalidas");
-  }
+  if (!isValid) throw new Error("Credenciales invalidas");
 
-  /* Si se paso todas la validaciones  */
-
-  return jwt.sign(
-    {
-      id: existingUser.id,
-      email,
-    },
+  const token = jwt.sign(
+    { id: existingUser.id, email },
     process.env.JWT_SECRET,
-    {
-      expiresIn: "1h",
-    }
+    { expiresIn: "1h" },
   );
+
+  return {
+    token,
+    user: {
+      id: existingUser.id,
+      email: existingUser.email,
+      loyverseKeyHash: existingUser.loyverseKeyHash,
+    },
+  };
 };
 
 export default logearUsuario;

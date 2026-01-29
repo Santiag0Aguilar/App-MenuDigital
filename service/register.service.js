@@ -4,7 +4,7 @@ const { PrismaClient } = pkg;
 const prisma = new PrismaClient();
 
 import registerUser from "./auth.service.js";
-import createMenu from "./createMenu.services.js";
+import createMenu from "./createMenu.service.js";
 
 const registroTransaccional = async (body) => {
   return prisma.$transaction(async (tx) => {

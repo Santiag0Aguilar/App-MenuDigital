@@ -1,11 +1,15 @@
 /* AQUI INICIALIZAMOS EL SERVIDOR */
 import express from "express";
-import UserRoutes from "./routes/usuario.js";
+import userRoutes from "./routes/usuario.routes.js";
+import authRoutes from "./routes/auth.routes.js";
+import menuRoutes from "./routes/menu.routes.js";
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/usuarios", UserRoutes);
+app.use("/usuarios", userRoutes);
+app.use("/auth", authRoutes);
+app.use("/menu", menuRoutes);
 
 app.get("/", (req, res) => {
   res.send("App working");

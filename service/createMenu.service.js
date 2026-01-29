@@ -1,9 +1,11 @@
-import { menuModel } from "./../model/menu.model.js";
-import fetchAll from "./../utils/fetchAll.js";
-const createMenu = async (key, userInfo, tx) => {
+import { decrypt } from "../utils/crypto.js";
+import { menuModel } from "../model/menu.model.js";
+import fetchAll from "../utils/fetchAll.js";
+const createMenu = async (userInfo, tx) => {
   try {
     const URL_BASE = "https://api.loyverse.com/v1.0";
-    const { id } = userInfo;
+    const { id, loyverseKeyHash } = userInfo;
+    const key = decrypt(loyverseKeyHash);
 
     const categories = await fetchAll(
       `${URL_BASE}/categories`,

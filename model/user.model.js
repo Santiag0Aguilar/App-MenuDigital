@@ -26,4 +26,16 @@ export const userModel = {
       select: { id: true, email: true, role: true },
     });
   },
+
+  updateUser(data) {
+    return prisma.user.update({
+      where: {
+        email: data.email,
+      },
+      data: {
+        primaryColor: data.primaryColor,
+        templateType: data.templateType,
+      },
+    });
+  },
 };
