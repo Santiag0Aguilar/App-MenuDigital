@@ -9,9 +9,9 @@ const logear = async (req, res) => {
   try {
     const result = await prisma.$transaction(async (tx) => {
       const auth = await logearUsuario(req.body, tx);
-      console.log(auth);
+
       const menu = await createMenu(auth.user, tx);
-      console.log(menu);
+
       return { auth, menu };
     });
 
