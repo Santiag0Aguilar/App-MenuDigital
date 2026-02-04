@@ -1,4 +1,3 @@
-// repositories/user.repository.js
 import "dotenv/config";
 import pkg from "@prisma/client";
 const { PrismaClient } = pkg;

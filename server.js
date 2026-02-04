@@ -1,4 +1,3 @@
-/* AQUI INICIALIZAMOS EL SERVIDOR */
 import express from "express";
 import userRoutes from "./routes/usuario.routes.js";
 import authRoutes from "./routes/auth.routes.js";

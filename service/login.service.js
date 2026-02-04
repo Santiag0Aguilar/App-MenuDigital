@@ -1,4 +1,3 @@
-/* VALIDAR QUE LA CONTRA SEA CORRECTA y ACORDE AL CORREO SANITIZAR CAMPOS */
 import jwt from "jsonwebtoken";
 import bycrpt from "bcrypt";
 import { userModel } from "./../model/user.model.js";

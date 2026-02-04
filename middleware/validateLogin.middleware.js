@@ -1,4 +1,3 @@
-// En los middelware nos encargamos de ver que la req sea valida para poder continuar unicamente NO LOGICA DE NEGOCIO y NO DB. SOLO  LO INDICADO
 import { body, validationResult } from "express-validator";
 
 const validateLogin = [
