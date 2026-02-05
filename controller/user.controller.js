@@ -1,9 +1,6 @@
-import pkg from "@prisma/client";
 import createMenu from "../service/createMenu.service.js";
 import registerUser from "./../service/auth.service.js";
-
-const { PrismaClient } = pkg;
-const prisma = new PrismaClient();
+import { prisma } from "./../lib/prisma.js";
 
 const registro = async (req, res) => {
   try {

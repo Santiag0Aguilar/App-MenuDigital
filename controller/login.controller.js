@@ -1,9 +1,6 @@
-import pkg from "@prisma/client";
 import logearUsuario from "./../service/login.service.js";
-import createMenu from "../service/createMenu.service.js";
-
-const { PrismaClient } = pkg;
-const prisma = new PrismaClient();
+import createMenu from "./../service/createMenu.service.js";
+import { prisma } from "./../lib/prisma.js";
 
 const logear = async (req, res) => {
   try {
