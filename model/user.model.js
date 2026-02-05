@@ -1,25 +1,25 @@
 import "dotenv/config";
-import pkg from "@prisma/client";
-const { PrismaClient } = pkg;
-
-const prisma = new PrismaClient({
-  datasourceUrl: process.env.DATABASE_URL,
-});
+import { prisma } from "./../lib/prisma.js";
 
 export const userModel = {
-  findByEmail(email, tx = prisma) {
+  findByEmail(email, tx) {
+    if (!tx) throw new Error("TX is required in upsertCategory");
+
     return tx.user.findUnique({
       where: { email },
     });
   },
 
-  create(data, tx = prisma) {
+  create(data, tx) {
+    if (!tx) throw new Error("TX is required in upsertCategory");
+
     return tx.user.create({
       data,
     });
   },
 
-  findById(userId, tx = prisma) {
+  findById(userId, tx) {
+    if (!tx) throw new Error("TX is required in upsertCategory");
     return tx.user.findUnique({
       where: { id: userId },
       select: { id: true, email: true, role: true },
