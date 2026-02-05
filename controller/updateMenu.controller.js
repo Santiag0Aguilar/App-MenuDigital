@@ -2,6 +2,8 @@ import MenuChangeService from "./../service/updateMenu.service.js";
 import { prisma } from "./../lib/prisma.js";
 
 const MenuUpdateController = async (req, res) => {
+  console.log("BODY:", req.body);
+
   try {
     const menuUpdate = await MenuChangeService(req.body);
 

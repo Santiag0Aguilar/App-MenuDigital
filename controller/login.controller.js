@@ -3,6 +3,8 @@ import createMenu from "./../service/createMenu.service.js";
 import { prisma } from "./../lib/prisma.js";
 
 const logear = async (req, res) => {
+  console.log("BODY:", req.body);
+
   try {
     const result = await prisma.$transaction(async (tx) => {
       const auth = await logearUsuario(req.body, tx);

@@ -3,6 +3,8 @@ import registerUser from "./../service/auth.service.js";
 import { prisma } from "./../lib/prisma.js";
 
 const registro = async (req, res) => {
+  console.log("BODY:", req.body);
+
   try {
     const result = await prisma.$transaction(async (tx) => {
       const user = await registerUser(req.body, tx);
