@@ -1,5 +1,5 @@
 import logearUsuario from "./../service/login.service.js";
-import createMenu from "./../service/createMenu.service.js";
+import createMenu from "../service/createMenuData.service.js";
 import { prisma } from "./../lib/prisma.js";
 
 const logear = async (req, res) => {
