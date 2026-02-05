@@ -1,34 +1,26 @@
-import { decrypt } from "../utils/crypto.js";
 import { menuModel } from "../model/menu.model.js";
-import fetchAll from "../utils/fetchAll.js";
-const createMenu = async (userInfo, tx) => {
-  try {
-    const URL_BASE = "https://api.loyverse.com/v1.0";
-    const { id, loyverseKeyHash } = userInfo;
-    const key = decrypt(loyverseKeyHash);
 
-    const categories = await fetchAll(
-      `${URL_BASE}/categories`,
-      key,
-      "categories",
-    );
-    const items = await fetchAll(`${URL_BASE}/items`, key, "items");
+const createMenu = async (userInfo, categories, items, tx) => {
+  try {
+    const { id: userId } = userInfo;
     const categoryMap = {};
 
     for (const cat of categories) {
-      const mapped = mapCategory(cat, id);
+      const mapped = mapCategory(cat, userId);
       const saved = await menuModel.upsertCategory(mapped, tx);
       categoryMap[cat.id] = saved.id;
     }
 
     for (const item of items) {
       if (!categoryMap[item.category_id]) continue;
-      const mapped = mapProduct(item, id, categoryMap);
+
+      const mapped = mapProduct(item, userId, categoryMap);
       await menuModel.upsertProduct(mapped, tx);
     }
 
     return { ok: true };
   } catch (error) {
+    console.error("CREATE MENU ERROR:", error);
     throw error;
   }
 };
@@ -43,22 +35,17 @@ function mapCategory(cat, userId) {
   };
 }
 
-const mapProduct = (item, userId, categoryMap) => ({
-  userId,
-  externalId: item.id,
-  name: item.item_name,
-  description: item.description?.replace(/<[^>]*>/g, ""),
-  imageUrl: item.image_url,
-  handle: item.handle,
-  categoryId: categoryMap[item.category_id],
-  isActive: !item.deleted_at,
-});
+function mapProduct(item, userId, categoryMap) {
+  return {
+    userId,
+    externalId: item.id,
+    name: item.item_name,
+    description: item.description?.replace(/<[^>]*>/g, ""),
+    imageUrl: item.image_url,
+    handle: item.handle,
+    categoryId: categoryMap[item.category_id],
+    isActive: !item.deleted_at,
+  };
+}
 
 export default createMenu;
-
-/* 
-
-YA trae la info de loyverse ahora hay que ver como organizar esta info para mandarla a nuestro modelo regresnado esta info formateada al
-modelo y este la pueda jugardar, aqui tenemos dos objetos que enviar, categoria y productos
-
-*/
