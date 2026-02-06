@@ -1,16 +1,19 @@
 import fetchAll from "../utils/fetchAll.js";
+import getTypeLoyverseKey from "../utils/getTypeLoyverseKey.js";
 
 const createMenuData = async (userInfo) => {
   const URL_BASE = "https://api.loyverse.com/v1.0";
-  const { id, loyverseKey } = userInfo;
+  const { id } = userInfo;
+  const key = await getTypeLoyverseKey(userInfo);
+
   console.log({ "UserInfo desde createData": userInfo });
   const categories = await fetchAll(
     `${URL_BASE}/categories`,
-    loyverseKey,
+    key,
     "categories",
   );
 
-  const items = await fetchAll(`${URL_BASE}/items`, loyverseKey, "items");
+  const items = await fetchAll(`${URL_BASE}/items`, key, "items");
 
   return {
     userId: id,
