@@ -3,7 +3,6 @@ import getTypeLoyverseKey from "../utils/getTypeLoyverseKey.js";
 
 const createMenuData = async (userInfo) => {
   const URL_BASE = "https://api.loyverse.com/v1.0";
-  const { id } = userInfo;
   const key = await getTypeLoyverseKey(userInfo);
 
   console.log({ "UserInfo desde createData": userInfo });
@@ -16,7 +15,6 @@ const createMenuData = async (userInfo) => {
   const items = await fetchAll(`${URL_BASE}/items`, key, "items");
 
   return {
-    userId: id,
     categories,
     items,
   };
