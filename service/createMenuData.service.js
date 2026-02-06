@@ -3,6 +3,7 @@ import getTypeLoyverseKey from "../utils/getTypeLoyverseKey.js";
 
 const createMenuData = async (userInfo) => {
   const URL_BASE = "https://api.loyverse.com/v1.0";
+  console.log(userInfo);
   const key = await getTypeLoyverseKey(userInfo);
 
   console.log({ "UserInfo desde createData": userInfo });

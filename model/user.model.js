@@ -18,9 +18,8 @@ export const userModel = {
     });
   },
 
-  findById(userId, tx) {
-    if (!tx) throw new Error("TX is required in upsertCategory");
-    return tx.user.findUnique({
+  findById(userId) {
+    return prisma.user.findUnique({
       where: { id: userId },
       select: { id: true, email: true, role: true },
     });

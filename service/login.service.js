@@ -22,7 +22,7 @@ const logearUsuario = async (body, tx) => {
     user: {
       id: existingUser.id,
       email: existingUser.email,
-      loyverseKeyHash: existingUser.loyverseKeyHash,
+      loyverseKeyEncrypt: existingUser.loyverseKeyHash,
     },
   };
 };
