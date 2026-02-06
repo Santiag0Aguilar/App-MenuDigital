@@ -1,9 +1,10 @@
 // service/saveMenu.service.js
 import { menuModel } from "./../model/menu.model.js";
 
-const saveMenu = async ({ userId, categories, items }, tx) => {
+const saveMenu = async ({ categories, items }, { id }, tx) => {
   const categoryMap = {};
-
+  const userId = id;
+  console.log({ "Esto llega al save menu como iduser": userId });
   for (const cat of categories) {
     const mapped = mapCategory(cat, userId);
     const saved = await menuModel.upsertCategory(mapped, tx);
