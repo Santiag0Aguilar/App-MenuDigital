@@ -5,23 +5,18 @@ import { prisma } from "./../lib/prisma.js";
 
 const registro = async (req, res) => {
   try {
-    // 1. Crear usuario (tx corto)
-    const user = await prisma.$transaction(async (tx) => {
-      return await registerUser(req.body, tx);
+    // 2. Fetch externo (SIN transacción)
+    const menuData = await createMenuData(req.body);
+    console.log(menuData);
+    // 3. Guardar todo en DB (CON transacción)
+    const result = await prisma.$transaction(async (tx) => {
+      const user = await registerUser(req.body, tx);
+      console.log({ user });
+      const menu = await saveMenu(menuData, user, tx);
+      return { user, menu };
     });
 
-    // 2. Fetch externo
-    const menuData = await createMenuData({
-      ...req.body,
-      id: user.id,
-    });
-
-    // 3. Guardar menú (tx nuevo)
-    const menu = await prisma.$transaction(async (tx) => {
-      return await saveMenu(menuData, user.id, tx);
-    });
-
-    res.status(201).json({ user, menu });
+    res.status(201).json({ user: result.user, menu: result.menu });
   } catch (error) {
     console.error(error);
     res.status(400).json({ error: error.message });
