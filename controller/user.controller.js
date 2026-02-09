@@ -5,18 +5,20 @@ import { prisma } from "./../lib/prisma.js";
 
 const registro = async (req, res) => {
   try {
-    // 2. Fetch externo (SIN transacción)
+    // 2. Fetch externo
     const menuData = await createMenuData(req.body);
-    console.log(menuData);
-    // 3. Guardar todo en DB (CON transacción)
+    // 3. Guardar todo en DB
     const result = await prisma.$transaction(async (tx) => {
       const user = await registerUser(req.body, tx);
-      console.log({ user });
-      const menu = await saveMenu(menuData, user, tx);
-      return { user, menu };
+
+      /* DENTRO DE AQUI TENGO UN ERROR SILENCIOSO QUE CAUSA PERDIDA DEL TX EN PETICIONES GRANDES */
+      console.log({ "Transition del controller": tx });
+      return { user };
     });
 
-    res.status(201).json({ user: result.user, menu: result.menu });
+    const menu = await saveMenu(menuData, result.user);
+
+    res.status(201).json({ user: result.user, menu });
   } catch (error) {
     console.error(error);
     res.status(400).json({ error: error.message });
