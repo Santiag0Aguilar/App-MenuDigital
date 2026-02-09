@@ -2,10 +2,8 @@ import "dotenv/config";
 import { prisma } from "./../lib/prisma.js";
 
 export const menuModel = {
-  async upsertCategory(data, tx) {
-    if (!tx) throw new Error("TX is required in upsertCategory");
-
-    return tx.category.upsert({
+  async upsertCategory(data) {
+    return prisma.category.upsert({
       where: {
         userId_externalId: {
           userId: data.userId,
@@ -22,10 +20,8 @@ export const menuModel = {
     });
   },
 
-  async upsertProduct(data, tx) {
-    if (!tx) throw new Error("TX is required in upsertProduct");
-
-    return tx.product.upsert({
+  async upsertProduct(data) {
+    return prisma.product.upsert({
       where: {
         userId_externalId: {
           userId: data.userId,
