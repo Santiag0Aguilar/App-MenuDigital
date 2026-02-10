@@ -1,29 +1,14 @@
-import { prisma } from "./../lib/prisma.js";
+import getMenuByUser from "../service/getMenu.service.js";
 
-const getMenuByUser = async (req, res) => {
-  const userId = Number(req.user.id);
-  console.log(req.user);
-  const categories = await prisma.category.findMany({
-    where: {
-      userId,
-      isActive: true,
-    },
-    include: {
-      products: {
-        where: {
-          isActive: true,
-        },
-        orderBy: {
-          name: "asc",
-        },
-      },
-    },
-    orderBy: {
-      name: "asc",
-    },
-  });
+const getMenu = async (req, res) => {
+  try {
+    const userId = Number(req.user.id);
+    const menu = await getMenuByUser(userId);
 
-  res.json({ categories });
+    res.status(200).json({ menu });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
 
-export default getMenuByUser;
+export default getMenu;

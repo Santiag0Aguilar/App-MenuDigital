@@ -40,4 +40,25 @@ export const menuModel = {
       create: data,
     });
   },
+  async findCategoriesWithProductsByUser(userId) {
+    return prisma.category.findMany({
+      where: {
+        userId,
+        isActive: true,
+      },
+      include: {
+        products: {
+          where: {
+            isActive: true,
+          },
+          orderBy: {
+            name: "asc",
+          },
+        },
+      },
+      orderBy: {
+        name: "asc",
+      },
+    });
+  },
 };
