@@ -30,6 +30,9 @@ function mapCategory(cat, userId) {
 }
 
 function mapProduct(item, userId, categoryMap) {
+  const variant = item.variants?.[0];
+  const price = variant?.stores?.[0]?.price ?? variant?.default_price ?? 0;
+
   return {
     userId,
     externalId: item.id,
@@ -37,6 +40,7 @@ function mapProduct(item, userId, categoryMap) {
     description: item.description?.replace(/<[^>]*>/g, ""),
     imageUrl: item.image_url,
     handle: item.handle,
+    price,
     categoryId: categoryMap[item.category_id],
     isActive: !item.deleted_at,
   };

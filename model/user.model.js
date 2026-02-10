@@ -21,7 +21,14 @@ export const userModel = {
   findById(userId) {
     return prisma.user.findUnique({
       where: { id: userId },
-      select: { id: true, email: true, role: true },
+      select: {
+        id: true,
+        email: true,
+        businessName: true,
+        templateType: true,
+        primaryColor: true,
+        role: true,
+      },
     });
   },
 

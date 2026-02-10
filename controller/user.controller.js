@@ -10,9 +10,6 @@ const registro = async (req, res) => {
     // 3. Guardar todo en DB
     const result = await prisma.$transaction(async (tx) => {
       const user = await registerUser(req.body, tx);
-
-      /* DENTRO DE AQUI TENGO UN ERROR SILENCIOSO QUE CAUSA PERDIDA DEL TX EN PETICIONES GRANDES */
-      console.log({ "Transition del controller": tx });
       return { user };
     });
 
