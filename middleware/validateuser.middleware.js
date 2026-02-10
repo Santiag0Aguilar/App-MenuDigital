@@ -11,6 +11,14 @@ const validateRegister = [
     .trim()
     .notEmpty()
     .withMessage("El nombre del negocio es obligatorio"),
+  body("phone")
+    .trim()
+    .notEmpty()
+    .withMessage("El teléfono es obligatorio")
+    .matches(/^\+\d{10,15}$/)
+    .withMessage(
+      "El teléfono debe estar en formato internacional. Ej: +5215512345678",
+    ),
   body("primaryColor")
     .trim()
     .notEmpty()
