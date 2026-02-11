@@ -17,7 +17,6 @@ const registro = async (req, res) => {
 
     res.status(201).json({ user: result.user, menu });
   } catch (error) {
-    console.error(error);
     res.status(400).json({ error: error.message });
   }
 };
