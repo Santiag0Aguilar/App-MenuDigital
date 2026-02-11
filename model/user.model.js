@@ -41,8 +41,8 @@ export const userModel = {
         templateType: true,
         primaryColor: true,
         role: true,
-        phone: true,
         slug: true,
+        phone: true,
       },
     });
   },
