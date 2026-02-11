@@ -4,9 +4,6 @@ import registerUser from "./../service/auth.service.js";
 import { prisma } from "./../lib/prisma.js";
 
 const registro = async (req, res) => {
-  console.log("CT:", req.headers["content-type"]);
-  console.log("BODY:", req.body);
-
   try {
     // 2. Fetch externo
     const menuData = await createMenuData(req.body);
