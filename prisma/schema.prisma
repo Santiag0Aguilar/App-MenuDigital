@@ -37,7 +37,7 @@ model User {
   primaryColor    String   @default("#000000")
   role            Role     @default(BUSINESS)
   createdAt       DateTime @default(now())
-
+  phone           String  @unique
   categories      Category[]
   products        Product[]
 }
@@ -69,7 +69,7 @@ model Product {
   description String?
   imageUrl    String?
   handle      String?
-
+  price       Float?
   isActive    Boolean  @default(true)
 
   createdAt   DateTime @default(now())
