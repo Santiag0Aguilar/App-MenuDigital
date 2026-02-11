@@ -1,7 +1,11 @@
 import { userModel } from "./../model/user.model.js";
 
-const MenuChangeService = async (body) => {
-  const updateMenu = await userModel.updateUser(body);
+const MenuChangeService = async ({ userId, primaryColor, templateType }) => {
+  const updateMenu = await userModel.updateUser({
+    userId,
+    primaryColor,
+    templateType,
+  });
 
   return updateMenu;
 };

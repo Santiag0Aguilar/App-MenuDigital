@@ -1,7 +1,6 @@
 import { body, validationResult } from "express-validator";
 
 const MenuValidateMiddleware = [
-  body("email").isEmail().withMessage("Email no válido").notEmpty(),
   body("primaryColor")
     .trim()
     .notEmpty()

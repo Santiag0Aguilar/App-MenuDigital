@@ -2,9 +2,16 @@ import MenuChangeService from "./../service/updateMenu.service.js";
 import { prisma } from "./../lib/prisma.js";
 
 const MenuUpdateController = async (req, res) => {
+  console.log(req.user);
   try {
-    const menuUpdate = await MenuChangeService(req.body);
+    const userId = req.user.id;
+    const { primaryColor, templateType } = req.body;
 
+    await MenuChangeService({
+      userId,
+      primaryColor,
+      templateType,
+    });
     res.status(201).json({
       message: "UI actualizada correctamente",
     });

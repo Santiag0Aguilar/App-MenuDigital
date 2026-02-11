@@ -40,14 +40,14 @@ export const userModel = {
     });
   },
 
-  updateUser(data) {
+  updateUser({ userId, primaryColor, templateType }) {
     return prisma.user.update({
       where: {
-        email: data.email,
+        id: userId,
       },
       data: {
-        primaryColor: data.primaryColor,
-        templateType: data.templateType,
+        primaryColor,
+        templateType,
       },
     });
   },

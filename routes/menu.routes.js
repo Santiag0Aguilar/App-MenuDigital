@@ -8,5 +8,10 @@ import getMenu from "./../controller/getMenu.controller.js";
 const router = Router();
 
 router.get("/", authMiddelware, getMenu);
-router.post("/update", MenuValidateMiddleware, MenuUpdateController);
+router.post(
+  "/update",
+  authMiddelware,
+  MenuValidateMiddleware,
+  MenuUpdateController,
+);
 export default router;
