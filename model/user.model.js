@@ -25,6 +25,12 @@ export const userModel = {
     });
   },
 
+  findBySlug: (slug) => {
+    return prisma.user.findUnique({
+      where: { slug },
+    });
+  },
+
   findById(userId) {
     return prisma.user.findUnique({
       where: { id: userId },

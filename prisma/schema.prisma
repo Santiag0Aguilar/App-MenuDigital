@@ -38,6 +38,7 @@ model User {
   role            Role     @default(BUSINESS)
   createdAt       DateTime @default(now())
   phone           String  @unique
+  slug            String  @unique
   categories      Category[]
   products        Product[]
 }
