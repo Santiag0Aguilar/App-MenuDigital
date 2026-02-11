@@ -12,9 +12,14 @@ const logearUsuario = async (body, tx) => {
   if (!isValid) throw new Error("Credenciales invalidas");
 
   const token = jwt.sign(
-    { id: existingUser.id, email },
+    {
+      id: existingUser.id,
+      email: existingUser.email,
+      slug: existingUser.slug,
+      role: existingUser.role,
+    },
     process.env.JWT_SECRET,
-    { expiresIn: "1h" },
+    { expiresIn: "24h" },
   );
 
   return {
