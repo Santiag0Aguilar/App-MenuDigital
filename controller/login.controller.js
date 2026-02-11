@@ -14,9 +14,7 @@ const logear = async (req, res) => {
     const menuData = await createMenu(auth.user);
 
     // 3. Guardar menu (otro tx)
-    const menu = await prisma.$transaction(async (tx) => {
-      return await saveMenu(menuData, auth.user, tx);
-    });
+    const menu = await saveMenu(menuData, auth.user);
 
     res.status(201).json({
       accessToken: auth.token,

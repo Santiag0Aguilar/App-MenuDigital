@@ -1,21 +1,22 @@
 // service/saveMenu.service.js
 import { menuModel } from "./../model/menu.model.js";
 
-const saveMenu = async ({ categories, items }, { id }, tx) => {
-  const categoryMap = {};
+const saveMenu = async ({ categories, items }, { id }) => {
   const userId = id;
-  console.log({ "Esto llega al save menu como iduser": userId });
-  for (const cat of categories) {
-    const mapped = mapCategory(cat, userId);
-    const saved = await menuModel.upsertCategory(mapped, tx);
-    categoryMap[cat.id] = saved.id;
-  }
 
-  for (const item of items) {
-    if (!categoryMap[item.category_id]) continue;
-    const mapped = mapProduct(item, userId, categoryMap);
-    await menuModel.upsertProduct(mapped, tx);
-  }
+  // 🟢 CAMBIO 1 — mapear todo en memoria primero
+  const mappedCategories = categories.map((cat) => mapCategory(cat, userId));
+
+  // 🟢 CAMBIO 2 — insertar categorías en bloque y obtener ids reales
+  const categoryMap = await menuModel.bulkUpsertCategories(mappedCategories);
+
+  // 🟢 CAMBIO 3 — mapear productos usando el nuevo categoryMap
+  const mappedProducts = items
+    .filter((item) => categoryMap[item.category_id])
+    .map((item) => mapProduct(item, userId, categoryMap));
+
+  // 🟢 CAMBIO 4 — upsert masivo real
+  await menuModel.bulkUpsertProducts(mappedProducts);
 
   return { ok: true };
 };
@@ -31,6 +32,9 @@ function mapCategory(cat, userId) {
 }
 
 function mapProduct(item, userId, categoryMap) {
+  const variant = item.variants?.[0];
+  const price = variant?.stores?.[0]?.price ?? variant?.default_price ?? 0;
+
   return {
     userId,
     externalId: item.id,
@@ -38,6 +42,7 @@ function mapProduct(item, userId, categoryMap) {
     description: item.description?.replace(/<[^>]*>/g, ""),
     imageUrl: item.image_url,
     handle: item.handle,
+    price,
     categoryId: categoryMap[item.category_id],
     isActive: !item.deleted_at,
   };

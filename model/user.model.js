@@ -9,6 +9,13 @@ export const userModel = {
       where: { email },
     });
   },
+  findByPhone(phone, tx) {
+    if (!tx) throw new Error("TX is required in upsertCategory");
+
+    return tx.user.findUnique({
+      where: { phone },
+    });
+  },
 
   create(data, tx) {
     if (!tx) throw new Error("TX is required in upsertCategory");
@@ -21,7 +28,15 @@ export const userModel = {
   findById(userId) {
     return prisma.user.findUnique({
       where: { id: userId },
-      select: { id: true, email: true, role: true },
+      select: {
+        id: true,
+        email: true,
+        businessName: true,
+        templateType: true,
+        primaryColor: true,
+        role: true,
+        phone: true,
+      },
     });
   },
 

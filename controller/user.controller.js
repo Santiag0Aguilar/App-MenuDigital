@@ -8,18 +8,17 @@ const registro = async (req, res) => {
   console.log("BODY:", req.body);
 
   try {
-    // 2. Fetch externo (SIN transacción)
+    // 2. Fetch externo
     const menuData = await createMenuData(req.body);
-    console.log(menuData);
-    // 3. Guardar todo en DB (CON transacción)
+    // 3. Guardar todo en DB
     const result = await prisma.$transaction(async (tx) => {
       const user = await registerUser(req.body, tx);
-      console.log({ user });
-      const menu = await saveMenu(menuData, user, tx);
-      return { user, menu };
+      return { user };
     });
 
-    res.status(201).json({ user: result.user, menu: result.menu });
+    const menu = await saveMenu(menuData, result.user);
+
+    res.status(201).json({ user: result.user, menu });
   } catch (error) {
     console.error(error);
     res.status(400).json({ error: error.message });

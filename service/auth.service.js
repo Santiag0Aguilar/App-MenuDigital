@@ -6,6 +6,9 @@ const registerUser = async (body, tx) => {
   const existingUser = await userModel.findByEmail(body.email, tx);
   if (existingUser) throw new Error("Email registrado");
 
+  const existingUserNumber = await userModel.findByPhone(body.phone, tx);
+  if (existingUserNumber) throw new Error("Numero de telefono registrado");
+
   const passwordHash = await bcrypt.hash(body.password, 10);
   const loyverseKeyHash = encrypt(body.loyverseKey);
 
@@ -18,6 +21,7 @@ const registerUser = async (body, tx) => {
       loyverseKeyHash,
       primaryColor: body.primaryColor,
       templateType: body.templateType,
+      phone: body.phone,
     },
     tx,
   );
