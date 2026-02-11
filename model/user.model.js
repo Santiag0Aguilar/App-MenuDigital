@@ -42,6 +42,7 @@ export const userModel = {
         primaryColor: true,
         role: true,
         phone: true,
+        slug: true,
       },
     });
   },
