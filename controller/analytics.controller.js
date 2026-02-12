@@ -1,5 +1,5 @@
 // controllers/analytics.controller.js
-import * as analyticsService from "./../services/analytics.service.js";
+import * as analyticsService from "./../service/analytics.service.js";
 
 export const trackEvent = async (req, res) => {
   try {

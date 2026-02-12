@@ -1,5 +1,5 @@
 // services/analytics.service.js
-import * as analyticsModel from "../prisma/analytics.model.js";
+import * as analyticsModel from "./../model/analytics.model.js";
 
 export const trackEvent = async (req) => {
   const { type, businessId, menuSlug, productId, externalProductId, price } =
