@@ -2,6 +2,7 @@
 import * as analyticsService from "./../service/analytics.service.js";
 
 export const trackEvent = async (req, res) => {
+  console.log(req.body);
   try {
     const event = await analyticsService.trackEvent(req);
     res.json({ ok: true, event });
