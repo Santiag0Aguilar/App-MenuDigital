@@ -1,17 +1,24 @@
-// services/analytics.service.js
 import * as analyticsModel from "./../model/analytics.model.js";
+import { userModel } from "./../model/user.model.js";
 
 export const trackEvent = async (req) => {
-  const { type, businessId, menuSlug, productId, externalProductId, price } =
-    req.body;
+  const { type, menuSlug, productId, externalProductId, price } = req.body;
 
+  // 1. Resolver negocio por slug
+  const business = await userModel.findBySlug(menuSlug);
+
+  if (!business) {
+    throw new Error("Business not found");
+  }
+
+  // 2. Crear evento usando MODEL (no prisma directo)
   return analyticsModel.createEvent({
     type,
-    businessId,
     menuSlug,
     productId,
     externalProductId,
     price,
+    businessId: business.id,
     userAgent: req.headers["user-agent"],
     ip: req.ip,
   });
