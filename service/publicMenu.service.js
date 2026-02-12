@@ -16,6 +16,7 @@ export const getPublicMenuService = async (slug) => {
       slug: user.slug,
       primaryColor: user.primaryColor,
       templateType: user.templateType,
+      phone: user.phone,
     },
     menu: categories,
   };
