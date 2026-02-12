@@ -13,18 +13,26 @@ app.use(express.urlencoded({ extended: true }));
 
 const allowedOrigins = [
   "http://localhost:3000",
-  "http://localhost:4173/",
+  "http://localhost:4173",
+  "http://localhost:5173",
   "https://app-menudigital.netlify.app",
 ];
 
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS bloqueado: " + origin));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   }),
 );
+
 app.options("*", cors());
 
 app.use("/usuarios", userRoutes);
