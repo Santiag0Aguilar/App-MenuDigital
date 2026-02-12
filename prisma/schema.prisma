@@ -82,3 +82,37 @@ model Product {
   @@unique([userId, externalId])
 }
  
+
+ model AnalyticsEvent {
+  id          Int      @id @default(autoincrement())
+
+  // Tipo de evento
+  type        String   // view_menu, view_product, add_to_cart
+
+  // Negocio (dueño del menú)
+  businessId  Int
+  business    User     @relation(fields: [businessId], references: [id])
+
+  // Menú público (slug)
+  menuSlug    String
+
+  // Producto (interno)
+  productId   Int?
+  product     Product? @relation(fields: [productId], references: [id])
+
+  // Producto externo (Loyverse)
+  externalProductId String?
+
+  // Metadata útil
+  price       Float?
+  userAgent   String?
+  ip          String?
+
+  createdAt   DateTime @default(now())
+
+  @@index([businessId])
+  @@index([menuSlug])
+  @@index([productId])
+  @@index([type])
+  @@index([createdAt])
+}
