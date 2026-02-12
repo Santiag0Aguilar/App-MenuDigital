@@ -10,10 +10,12 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
-/* ===== ENUMS ===== */
+/**
+ * ===== ENUMS =====
+ */
 
 enum Role {
   ADMIN
@@ -25,90 +27,95 @@ enum Template {
   TEMPLATE_2
 }
 
-/* ===== MODELS ===== */
+/**
+ * ===== MODELS =====
+ */
 
 model User {
-  id              Int      @id @default(autoincrement())
-  email           String   @unique
+  id              Int        @id @default(autoincrement())
+  email           String     @unique
   password        String
   businessName    String
   loyverseKeyHash String
-  templateType    Template @default(TEMPLATE_1)
-  primaryColor    String   @default("#000000")
-  role            Role     @default(BUSINESS)
-  createdAt       DateTime @default(now())
-  phone           String  @unique
-  slug            String  @unique
+  templateType    Template   @default(TEMPLATE_1)
+  primaryColor    String     @default("#000000")
+  role            Role       @default(BUSINESS)
+  createdAt       DateTime   @default(now())
+  phone           String     @unique
+  slug            String     @unique
   categories      Category[]
   products        Product[]
+
+  analyticsEvents AnalyticsEvent[]
 }
 
 model Category {
-  id         Int      @id @default(autoincrement())
+  id         Int     @id @default(autoincrement())
   userId     Int
-  externalId String   // id de Loyverse
+  externalId String // id de Loyverse
   name       String
-  color      String?  // GREY, BLUE, etc
-  isActive   Boolean  @default(true)
+  color      String? // GREY, BLUE, etc
+  isActive   Boolean @default(true)
 
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  user       User     @relation(fields: [userId], references: [id])
-  products   Product[]
+  user     User      @relation(fields: [userId], references: [id])
+  products Product[]
 
-  @@unique([userId, externalId]) 
+  @@unique([userId, externalId])
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
-  userId      Int
-  categoryId  Int
-  externalId  String   // item.id de Loyverse
+  id         Int    @id @default(autoincrement())
+  userId     Int
+  categoryId Int
+  externalId String // item.id de Loyverse
 
   name        String
   description String?
   imageUrl    String?
   handle      String?
   price       Float?
-  isActive    Boolean  @default(true)
+  isActive    Boolean @default(true)
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  user        User     @relation(fields: [userId], references: [id])
-  category    Category @relation(fields: [categoryId], references: [id])
+  user     User     @relation(fields: [userId], references: [id])
+  category Category @relation(fields: [categoryId], references: [id])
+
+  analyticsEvents AnalyticsEvent[]
 
   @@unique([userId, externalId])
 }
- 
 
- model AnalyticsEvent {
-  id          Int      @id @default(autoincrement())
+model AnalyticsEvent {
+  id Int @id @default(autoincrement())
 
   // Tipo de evento
-  type        String   // view_menu, view_product, add_to_cart
+  type String // view_menu, view_product, add_to_cart
 
   // Negocio (dueño del menú)
-  businessId  Int
-  business    User     @relation(fields: [businessId], references: [id])
+  businessId Int
+  business   User @relation(fields: [businessId], references: [id])
 
   // Menú público (slug)
-  menuSlug    String
+  menuSlug String
 
   // Producto (interno)
-  productId   Int?
-  product     Product? @relation(fields: [productId], references: [id])
+  productId Int?
+  product   Product? @relation(fields: [productId], references: [id])
 
   // Producto externo (Loyverse)
   externalProductId String?
 
   // Metadata útil
-  price       Float?
-  userAgent   String?
-  ip          String?
+  price     Float?
+  userAgent String?
+  ip        String?
 
-  createdAt   DateTime @default(now())
+  createdAt DateTime @default(now())
 
   @@index([businessId])
   @@index([menuSlug])
