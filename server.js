@@ -13,6 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 
 const allowedOrigins = [
   "http://localhost:3000",
+  "http://localhost:4173/",
   "https://app-menudigital.netlify.app",
 ];
 
