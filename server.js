@@ -33,8 +33,6 @@ app.use(
   }),
 );
 
-app.options("*", cors());
-
 app.use("/usuarios", userRoutes);
 app.use("/auth", authRoutes);
 app.use("/menu", menuRoutes);
