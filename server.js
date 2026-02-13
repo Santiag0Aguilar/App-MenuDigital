@@ -10,7 +10,7 @@ import menuRoutes from "./routes/menu.routes.js";
 import dashboardRoutes from "./routes/dashboard.routes.js";
 import publicMenuRoutes from "./routes/publicMenu.routes.js";
 import analyticsRoutes from "./routes/analytics.routes.js";
-
+import { prisma } from "./lib/prisma.js";
 const app = express();
 
 /* Headers Security */
@@ -59,6 +59,25 @@ app.use(
     credentials: true,
   }),
 );
+
+app.get("/health", async (req, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+
+    res.status(200).json({
+      status: "ok",
+      db: "connected",
+      uptime: process.uptime(),
+      timestamp: new Date().toISOString(),
+    });
+  } catch {
+    res.status(500).json({
+      status: "error",
+      db: "disconnected",
+      timestamp: new Date().toISOString(),
+    });
+  }
+});
 
 app.use("/api", publicLimiter, publicMenuRoutes);
 
