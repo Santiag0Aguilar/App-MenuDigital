@@ -75,6 +75,7 @@ export const menuModel = {
           (c) =>
             Prisma.sql`(
       ${c.userId},
+      ${c.source}::"DataSource",
       ${c.externalId},
       ${c.name},
       ${c.color},
@@ -87,9 +88,9 @@ export const menuModel = {
 
       await tx.$executeRaw`
           INSERT INTO "Category"
-          ("userId","externalId","name","color","isActive","createdAt","updatedAt")
+          ("userId","source","externalId","name","color","isActive","createdAt","updatedAt")
           VALUES ${values}
-          ON CONFLICT ("userId","externalId")
+          ON CONFLICT ("userId", "source","externalId")
           DO UPDATE SET
             name = EXCLUDED.name,
             color = EXCLUDED.color,
@@ -125,6 +126,7 @@ export const menuModel = {
           (p) =>
             Prisma.sql`(
       ${p.userId},
+      ${p.source}::"DataSource",
       ${p.externalId},
       ${p.name},
       ${p.description},
@@ -141,9 +143,9 @@ export const menuModel = {
 
       await tx.$executeRaw`
         INSERT INTO "Product"
-        ("userId","externalId","name","description","imageUrl","handle","price","categoryId","isActive","createdAt","updatedAt")
+        ("userId", "source","externalId","name","description","imageUrl","handle","price","categoryId","isActive","createdAt","updatedAt")
         VALUES ${values}
-        ON CONFLICT ("userId","externalId")
+        ON CONFLICT ("userId","source","externalId")
         DO UPDATE SET
           name = EXCLUDED.name,
           description = EXCLUDED.description,

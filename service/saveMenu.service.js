@@ -1,5 +1,6 @@
 // service/saveMenu.service.js
 import { menuModel } from "./../model/menu.model.js";
+import { DataSource } from "@prisma/client";
 
 const saveMenu = async ({ categories, items }, { id }) => {
   const userId = id;
@@ -9,7 +10,6 @@ const saveMenu = async ({ categories, items }, { id }) => {
 
   // 🟢 CAMBIO 2 — insertar categorías en bloque y obtener ids reales
   const categoryMap = await menuModel.bulkUpsertCategories(mappedCategories);
-
   // 🟢 CAMBIO 3 — mapear productos usando el nuevo categoryMap
   const mappedProducts = items
     .filter((item) => categoryMap[item.category_id])
@@ -24,6 +24,7 @@ const saveMenu = async ({ categories, items }, { id }) => {
 function mapCategory(cat, userId) {
   return {
     userId,
+    source: DataSource.LOYVERSE,
     externalId: cat.id,
     name: cat.name,
     color: cat.color,
@@ -37,6 +38,7 @@ function mapProduct(item, userId, categoryMap) {
 
   return {
     userId,
+    source: DataSource.LOYVERSE,
     externalId: item.id,
     name: item.item_name,
     description: item.description?.replace(/<[^>]*>/g, ""),

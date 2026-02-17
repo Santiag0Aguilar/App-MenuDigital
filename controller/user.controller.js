@@ -5,19 +5,23 @@ import { prisma } from "./../lib/prisma.js";
 
 const registro = async (req, res) => {
   try {
-    // 2. Fetch externo
-    const menuData = await createMenuData(req.body);
     // 3. Guardar todo en DB
     const result = await prisma.$transaction(async (tx) => {
       const user = await registerUser(req.body, tx);
       return { user };
     });
 
-    const menu = await saveMenu(menuData, result.user);
+    // 2. Fetch externo
+    if (req.body.loyverseKey) {
+      const menuData = await createMenuData(req.body);
 
-    res.status(201).json({ user: result.user, menu });
+      console.log({ user: result.user });
+      const menu = await saveMenu(menuData, result.user);
+    }
+
+    res.status(201).json({ user: result.user });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ a: "a", error: error.message });
   }
 };
 

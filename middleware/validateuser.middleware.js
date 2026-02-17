@@ -23,10 +23,9 @@ const validateRegister = [
     .trim()
     .notEmpty()
     .withMessage("El color principal es obligatorio"),
-  body("loyverseKey")
-    .trim()
-    .notEmpty()
-    .withMessage("Se requiere la llave de loyverse"),
+  body("source")
+    .isIn(["INTERNAL", "LOYVERSE"])
+    .withMessage("Metodo para generar menu no válido"),
 
   body("rol").isIn(["ADMIN", "BUSINESS"]).withMessage("Rol no válido"),
   body("templateType")

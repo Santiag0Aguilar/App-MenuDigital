@@ -27,15 +27,16 @@ const registerUser = async (body, tx) => {
   }
 
   const passwordHash = await bcrypt.hash(body.password, 10);
-  const loyverseKeyHash = encrypt(body.loyverseKey);
+
+  const loyverseKeyHash = body.loyverseKey ? encrypt(body.loyverseKey) : null;
 
   return userModel.create(
     {
       email: body.email,
       password: passwordHash,
+      loyverseKeyHash,
       role: body.rol,
       businessName: body.businessName,
-      loyverseKeyHash,
       primaryColor: body.primaryColor,
       templateType: body.templateType,
       phone: body.phone,

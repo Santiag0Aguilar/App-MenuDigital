@@ -83,10 +83,10 @@ app.use("/api", publicLimiter, publicMenuRoutes);
 
 app.use(globalLimiter);
 app.use("/analytics", analyticsRoutes);
-app.use("/usuarios", userRoutes);
-app.use("/auth", authRoutes);
-app.use("/menu", menuRoutes);
-app.use("/dashboard", dashboardRoutes);
+app.use("/usuarios", userRoutes); /* RUTAS LISTAS */
+app.use("/auth", authRoutes); /* RUTAS LISTAS */
+app.use("/menu", menuRoutes); /* RUTAS LISTAS */
+app.use("/dashboard", dashboardRoutes); /* PENDIENTES */
 
 /* RUTAS DEL CRUD */
 
