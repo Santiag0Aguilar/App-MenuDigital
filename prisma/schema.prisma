@@ -27,6 +27,14 @@ enum Template {
   TEMPLATE_2
 }
 
+
+enum DataSource {
+  INTERNAL   // creado por el usuario
+  LOYVERSE   // viene de Loyverse
+  OTHER      // futuro: Square, Shopify, etc
+}
+
+
 /**
  * ===== MODELS =====
  */
@@ -36,23 +44,32 @@ model User {
   email           String     @unique
   password        String
   businessName    String
-  loyverseKeyHash String
+  role            Role       @default(BUSINESS)
   templateType    Template   @default(TEMPLATE_1)
   primaryColor    String     @default("#000000")
-  role            Role       @default(BUSINESS)
   createdAt       DateTime   @default(now())
   phone           String     @unique
   slug            String     @unique
+
+
+  loyverseKeyHash String?
+
+
   categories      Category[]
   products        Product[]
-
   analyticsEvents AnalyticsEvent[]
 }
 
 model Category {
   id         Int     @id @default(autoincrement())
+ 
+ 
   userId     Int
-  externalId String // id de Loyverse
+  source     DataSource @default(INTERNAL)
+ 
+  externalId String? // id de Loyverse opcional
+  
+  
   name       String
   color      String? // GREY, BLUE, etc
   isActive   Boolean @default(true)
@@ -63,14 +80,18 @@ model Category {
   user     User      @relation(fields: [userId], references: [id])
   products Product[]
 
-  @@unique([userId, externalId])
+  @@unique([userId, source, externalId])
 }
 
 model Product {
   id         Int    @id @default(autoincrement())
+  
+  
   userId     Int
   categoryId Int
-  externalId String // item.id de Loyverse
+  source     DataSource @default(INTERNAL)
+
+  externalId String? // item.id de Loyverse opcional
 
   name        String
   description String?
@@ -87,7 +108,7 @@ model Product {
 
   analyticsEvents AnalyticsEvent[]
 
-  @@unique([userId, externalId])
+  @@unique([userId, source ,externalId])
 }
 
 model AnalyticsEvent {
@@ -107,7 +128,7 @@ model AnalyticsEvent {
   productId Int?
   product   Product? @relation(fields: [productId], references: [id])
 
-  // Producto externo (Loyverse)
+
   externalProductId String?
 
   // Metadata útil
