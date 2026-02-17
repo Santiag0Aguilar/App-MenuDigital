@@ -88,6 +88,8 @@ app.use("/auth", authRoutes);
 app.use("/menu", menuRoutes);
 app.use("/dashboard", dashboardRoutes);
 
+/* RUTAS DEL CRUD */
+
 app.get("/", (req, res) => {
   res.send("App working");
 });
