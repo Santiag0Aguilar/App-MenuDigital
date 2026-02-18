@@ -3,14 +3,14 @@ import { prisma } from "./../lib/prisma.js";
 
 export const userModel = {
   findByEmail(email, tx) {
-    if (!tx) throw new Error("TX is required in upsertCategory");
+    if (!tx) throw new Error("TX is required in findByEmail");
 
     return tx.user.findUnique({
       where: { email },
     });
   },
   findByPhone(phone, tx) {
-    if (!tx) throw new Error("TX is required in upsertCategory");
+    if (!tx) throw new Error("TX is required in findByPhone");
 
     return tx.user.findUnique({
       where: { phone },
@@ -18,7 +18,7 @@ export const userModel = {
   },
 
   create(data, tx) {
-    if (!tx) throw new Error("TX is required in upsertCategory");
+    if (!tx) throw new Error("TX is required in create");
 
     return tx.user.create({
       data,

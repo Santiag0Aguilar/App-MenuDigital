@@ -26,4 +26,35 @@ export const categoryModel = {
       },
     });
   },
+
+  findByUserAndName: ({ userId, name }) => {
+    return prisma.category.findFirst({
+      where: {
+        userId,
+        name,
+        source: "INTERNAL",
+      },
+    });
+  },
+
+  create: (data) => {
+    return prisma.category.create({ data });
+  },
+  findByEmail(email) {
+    return prisma.user.findUnique({
+      where: { email },
+    });
+  },
+  findById(id) {
+    return prisma.category.findUnique({
+      where: { id: Number(id) },
+    });
+  },
+
+  update(id, data) {
+    return prisma.category.update({
+      where: { id: Number(id) },
+      data,
+    });
+  },
 };

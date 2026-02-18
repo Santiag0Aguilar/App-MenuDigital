@@ -5,7 +5,7 @@ import slugify from "slugify";
 
 const registerUser = async (body, tx) => {
   const existingUser = await userModel.findByEmail(body.email, tx);
-  if (existingUser) throw new Error("Email registrado");
+  if (existingUser) throw new Error("Email no valido");
 
   const existingUserNumber = await userModel.findByPhone(body.phone, tx);
   if (existingUserNumber) throw new Error("Numero de telefono registrado");
