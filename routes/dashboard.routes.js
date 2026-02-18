@@ -10,6 +10,16 @@ import {
 } from "./../controller/category.controller.js";
 import { updateCategoryValidator } from "../middleware/updateCategoryValidator.middleware.js";
 import { deleteCategoryValidator } from "../middleware/deleteCategoryValidator.middleware.js";
+import {
+  createProductValidator,
+  updateProductValidator,
+  deleteProductValidator,
+} from "../middleware/createProductValidator.middleware.js";
+import {
+  createProduct,
+  deleteProduct,
+  updateProduct,
+} from "../controller/product.controller.js";
 
 const router = Router();
 
@@ -17,9 +27,19 @@ router.get("/", authMiddelware, me);
 
 /* productos*/
 router.get("/products", authMiddelware);
-router.post("/products", authMiddelware);
-router.put("/products/:id", authMiddelware);
-router.delete("/products/:id", authMiddelware);
+router.post("/products", authMiddelware, createProductValidator, createProduct);
+router.put(
+  "/products/:id",
+  authMiddelware,
+  updateProductValidator,
+  updateProduct,
+);
+router.delete(
+  "/products/:id",
+  authMiddelware,
+  deleteProductValidator,
+  deleteProduct,
+);
 
 /* categorias */
 router.get("/categories", authMiddelware, getCategories);
