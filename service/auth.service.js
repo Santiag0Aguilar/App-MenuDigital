@@ -41,6 +41,7 @@ const registerUser = async (body, tx) => {
       templateType: body.templateType,
       phone: body.phone,
       slug,
+      source: body.source,
     },
     tx,
   );

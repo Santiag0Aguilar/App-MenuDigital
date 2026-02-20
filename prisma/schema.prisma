@@ -50,7 +50,7 @@ model User {
   createdAt       DateTime   @default(now())
   phone           String     @unique
   slug            String     @unique
-
+  source          DataSource    @default(INTERNAL)
 
   loyverseKeyHash String?
 
