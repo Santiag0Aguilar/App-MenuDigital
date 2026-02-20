@@ -16,6 +16,7 @@ const MenuValidateMiddleware = [
         errors: errors.array(),
       });
     }
+
     next();
   },
 ];
