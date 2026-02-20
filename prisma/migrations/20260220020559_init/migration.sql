@@ -4,22 +4,19 @@ CREATE TYPE "Role" AS ENUM ('ADMIN', 'BUSINESS');
 -- CreateEnum
 CREATE TYPE "Template" AS ENUM ('TEMPLATE_1', 'TEMPLATE_2');
 
--- CreateEnum
-CREATE TYPE "DataSource" AS ENUM ('INTERNAL', 'LOYVERSE', 'OTHER');
-
 -- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "businessName" TEXT NOT NULL,
-    "role" "Role" NOT NULL DEFAULT 'BUSINESS',
+    "loyverseKeyHash" TEXT NOT NULL,
     "templateType" "Template" NOT NULL DEFAULT 'TEMPLATE_1',
     "primaryColor" TEXT NOT NULL DEFAULT '#000000',
+    "role" "Role" NOT NULL DEFAULT 'BUSINESS',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "phone" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
-    "loyverseKeyHash" TEXT,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -28,8 +25,7 @@ CREATE TABLE "User" (
 CREATE TABLE "Category" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
-    "source" "DataSource" NOT NULL DEFAULT 'INTERNAL',
-    "externalId" TEXT,
+    "externalId" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "color" TEXT,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
@@ -44,8 +40,7 @@ CREATE TABLE "Product" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
     "categoryId" INTEGER NOT NULL,
-    "source" "DataSource" NOT NULL DEFAULT 'INTERNAL',
-    "externalId" TEXT,
+    "externalId" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
     "imageUrl" TEXT,
@@ -84,10 +79,10 @@ CREATE UNIQUE INDEX "User_phone_key" ON "User"("phone");
 CREATE UNIQUE INDEX "User_slug_key" ON "User"("slug");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Category_userId_source_externalId_key" ON "Category"("userId", "source", "externalId");
+CREATE UNIQUE INDEX "Category_userId_externalId_key" ON "Category"("userId", "externalId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Product_userId_source_externalId_key" ON "Product"("userId", "source", "externalId");
+CREATE UNIQUE INDEX "Product_userId_externalId_key" ON "Product"("userId", "externalId");
 
 -- CreateIndex
 CREATE INDEX "AnalyticsEvent_businessId_idx" ON "AnalyticsEvent"("businessId");
@@ -108,10 +103,10 @@ CREATE INDEX "AnalyticsEvent_createdAt_idx" ON "AnalyticsEvent"("createdAt");
 ALTER TABLE "Category" ADD CONSTRAINT "Category_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Product" ADD CONSTRAINT "Product_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Product" ADD CONSTRAINT "Product_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Product" ADD CONSTRAINT "Product_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Product" ADD CONSTRAINT "Product_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "AnalyticsEvent" ADD CONSTRAINT "AnalyticsEvent_businessId_fkey" FOREIGN KEY ("businessId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

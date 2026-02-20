@@ -21,3 +21,8 @@ export const getPublicMenuService = async (slug) => {
     menu: categories,
   };
 };
+
+export const getAllBusinessRegister = async () => {
+  const data = await userModel.getAllBusinessRegister();
+  return data;
+};

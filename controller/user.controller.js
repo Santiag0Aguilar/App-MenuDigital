@@ -4,6 +4,7 @@ import registerUser from "./../service/auth.service.js";
 import { prisma } from "./../lib/prisma.js";
 
 const registro = async (req, res) => {
+  console.log(req.body);
   try {
     // 3. Guardar todo en DB
     const result = await prisma.$transaction(async (tx) => {

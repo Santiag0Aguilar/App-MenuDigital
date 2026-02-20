@@ -30,7 +30,21 @@ export const userModel = {
       where: { slug },
     });
   },
+  async getAllBusinessRegister() {
+    const [slugs, total] = await Promise.all([
+      prisma.user.findMany({
+        select: {
+          slug: true,
+        },
+      }),
+      prisma.user.count(),
+    ]);
 
+    return {
+      total,
+      slugs,
+    };
+  },
   findById(userId) {
     return prisma.user.findUnique({
       where: { id: userId },

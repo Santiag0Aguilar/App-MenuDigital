@@ -36,13 +36,13 @@ enum DataSource {
 
 
 /**
- * ===== MODELS =====
+ * ===== MODELS =====  
  */
 
 model User {
   id              Int        @id @default(autoincrement())
   email           String     @unique
-  password        String
+  password        String 
   businessName    String
   role            Role       @default(BUSINESS)
   templateType    Template   @default(TEMPLATE_1)
