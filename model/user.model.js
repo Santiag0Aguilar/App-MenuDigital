@@ -57,6 +57,7 @@ export const userModel = {
         role: true,
         slug: true,
         phone: true,
+        source: true,
       },
     });
   },
