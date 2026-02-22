@@ -1,4 +1,4 @@
-## 🚀 Live Demo
+##  Live Demo
 
 - API Base URL: https://app-menudigital.onrender.com
 - Demo: https://app-menudigital.netlify.app/home
