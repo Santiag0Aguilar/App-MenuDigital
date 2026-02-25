@@ -116,46 +116,58 @@ export const menuModel = {
     if (!products.length) return;
 
     await prisma.$transaction(async (tx) => {
-      await tx.product.createMany({
-        data: products,
-        skipDuplicates: true,
-      });
-
+      // 1️⃣ UPSERT masivo
       const values = Prisma.join(
         products.map(
           (p) =>
             Prisma.sql`(
-      ${p.userId},
-      ${p.source}::"DataSource",
-      ${p.externalId},
-      ${p.name},
-      ${p.description},
-      ${p.imageUrl},
-      ${p.handle},
-      ${p.price},
-      ${p.categoryId},
-      ${p.isActive},
-      NOW(),
-      NOW()
-    )`,
+            ${p.userId},
+            ${p.source}::"DataSource",
+            ${p.externalId},
+            ${p.name},
+            ${p.description},
+            ${p.imageUrl},
+            ${p.handle},
+            ${p.price},
+            ${p.categoryId},
+            ${p.isActive},
+            NOW(),
+            NOW()
+          )`,
         ),
       );
 
       await tx.$executeRaw`
-        INSERT INTO "Product"
-        ("userId", "source","externalId","name","description","imageUrl","handle","price","categoryId","isActive","createdAt","updatedAt")
-        VALUES ${values}
-        ON CONFLICT ("userId","source","externalId")
-        DO UPDATE SET
-          name = EXCLUDED.name,
-          description = EXCLUDED.description,
-          "imageUrl" = EXCLUDED."imageUrl",
-          handle = EXCLUDED.handle,
-          price = EXCLUDED.price,
-          "categoryId" = EXCLUDED."categoryId",
-          "isActive" = EXCLUDED."isActive",
-          "updatedAt" = NOW();
-      `;
+      INSERT INTO "Product"
+      ("userId","source","externalId","name","description","imageUrl","handle","price","categoryId","isActive","createdAt","updatedAt")
+      VALUES ${values}
+      ON CONFLICT ("userId","source","externalId")
+      DO UPDATE SET
+        name = EXCLUDED.name,
+        description = EXCLUDED.description,
+        "imageUrl" = EXCLUDED."imageUrl",
+        handle = EXCLUDED.handle,
+        price = EXCLUDED.price,
+        "categoryId" = EXCLUDED."categoryId",
+        "isActive" = EXCLUDED."isActive",
+        "updatedAt" = NOW();
+    `;
+
+      // 2️⃣ DESACTIVAR LOS QUE YA NO VINIERON
+      const externalIds = products.map((p) => p.externalId);
+
+      await tx.product.updateMany({
+        where: {
+          userId: products[0].userId,
+          source: products[0].source,
+          externalId: {
+            notIn: externalIds,
+          },
+        },
+        data: {
+          isActive: false,
+        },
+      });
     });
   },
 };

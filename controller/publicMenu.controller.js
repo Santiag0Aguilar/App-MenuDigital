@@ -25,3 +25,11 @@ export const getAllBusinessRegister = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+export const getItemMenu = (req, res) => {
+  try {
+    const { slug, productoId } = req.params;
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

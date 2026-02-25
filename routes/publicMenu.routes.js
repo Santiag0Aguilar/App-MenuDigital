@@ -8,4 +8,5 @@ const router = Router();
 
 router.get("/public/menu/:slug", getPublicMenuController);
 router.get("/public/menus", getAllBusinessRegister);
+
 export default router;
