@@ -60,25 +60,13 @@ app.use(
   }),
 );
 
-app.get("/health", async (req, res) => {
-  try {
-    await prisma.$queryRaw`SELECT 1`;
-
-    res.status(200).json({
-      status: "ok",
-      db: "connected",
-      uptime: process.uptime(),
-      timestamp: new Date().toISOString(),
-    });
-  } catch {
-    res.status(500).json({
-      status: "error",
-      db: "disconnected",
-      timestamp: new Date().toISOString(),
-    });
-  }
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  });
 });
-
 app.use("/api", publicLimiter, publicMenuRoutes);
 
 app.use(globalLimiter);
@@ -98,4 +86,14 @@ const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log("Servidor corriendo en puerto", PORT);
+});
+
+process.on("SIGTERM", async () => {
+  await prisma.$disconnect();
+  process.exit(0);
+});
+
+process.on("SIGINT", async () => {
+  await prisma.$disconnect();
+  process.exit(0);
 });
