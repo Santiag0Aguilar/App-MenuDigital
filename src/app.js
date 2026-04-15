@@ -1,3 +1,4 @@
+/* MANEJA EL INICIAR EL SERVIDOR */
 import express from "express";
 import helmet from "helmet";
 import cors from "cors";
@@ -10,7 +11,7 @@ import menuRoutes from "./routes/menu.routes.js";
 import dashboardRoutes from "./routes/dashboard.routes.js";
 import publicMenuRoutes from "./routes/publicMenu.routes.js";
 import analyticsRoutes from "./routes/analytics.routes.js";
-import { prisma } from "./lib/prisma.js";
+
 const app = express();
 
 /* Headers Security */
@@ -75,25 +76,3 @@ app.use("/usuarios", userRoutes); /* RUTAS LISTAS */
 app.use("/auth", authRoutes); /* RUTAS LISTAS */
 app.use("/menu", menuRoutes); /* RUTAS LISTAS */
 app.use("/dashboard", dashboardRoutes); /* PENDIENTES */
-
-/* RUTAS DEL CRUD */
-
-app.get("/", (req, res) => {
-  res.send("App working");
-});
-
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-  console.log("Servidor corriendo en puerto", PORT);
-});
-
-process.on("SIGTERM", async () => {
-  await prisma.$disconnect();
-  process.exit(0);
-});
-
-process.on("SIGINT", async () => {
-  await prisma.$disconnect();
-  process.exit(0);
-});
